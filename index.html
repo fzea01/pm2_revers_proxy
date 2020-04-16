@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>Covid tracker api</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #1e88e5;
+        }
+
+        i {
+            color: #1e88e5;
+        }
+
+        .wrapper {
+            width: 1040px;
+            margin: 0 auto;
+        }
+
+        .statistic {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .total_case_box {
+            margin-top: 2rem;
+            padding: 3rem;
+            text-align: center;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 5px 5px 40px rgba(0, 0, 0, 0.3);
+            -webkit-border-radius: 15px;
+            -moz-border-radius: 15px;
+            -ms-border-radius: 15px;
+            -o-border-radius: 15px;
+        }
+
+        .box_wrapper {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 1rem;
+            text-align: center;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 5px 5px 40px rgba(0, 0, 0, 0.3);
+            -webkit-border-radius: 15px;
+            -moz-border-radius: 15px;
+            -ms-border-radius: 15px;
+            -o-border-radius: 15px;
+        }
+
+        .box {
+            border-right: 1px solid#ccc;
+        }
+
+        .box:last-child {
+            border: none;
+        }
+
+        .countries_stat {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 5px 5px 40px rgba(0, 0, 0, 0.3);
+            -webkit-border-radius: 15px;
+            -moz-border-radius: 15px;
+            -ms-border-radius: 15px;
+            -o-border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="wrapper">
+        <div class="statistic">
+            <div class="total_case_box">
+                <h2>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    Total Cases
+                </h2>
+                <p style="font-size: 3rem;" id="total_cases">test</p>
+            </div>
+
+            <div class="box_wrapper">
+                <div class="box">
+                    <h2>
+                        <i class="fa fa-user-times" aria-hidden="true"></i>
+                        Total Death
+                    </h2>
+                    <p style="font-size: 1.5rem;" id="total_death">test</p>
+                </div>
+                <div class="box">
+                    <h2>
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        Total Recovery
+                    </h2>
+                    <p style="font-size: 1.5rem;" id="total_recovered">test</p>
+                </div>
+                <div class="box">
+                    <h2>
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        New Case
+                    </h2>
+                    <p style="font-size: 1.5rem;" id="new_case">test</p>
+                </div>
+                <div class="box">
+                    <h2>
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                        New Death
+                    </h2>
+                    <p style="font-size: 1.5rem;" id="new_death">test</p>
+                </div>
+            </div>
+        </div>
+
+        <table class="countries_stat" id="countries_stat">
+            <tr>
+                <th>Country</th>
+                <th>Case</th>
+                <th>New Case</th>
+                <th>Deaths</th>
+                <th>New Deaths</th>
+                <th>Serious Critical</th>
+                <th>Total Recovered</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        let new_cases = document.getElementById('new_case');
+        let new_death = document.getElementById('new_death');
+        let total_death = document.getElementById('total_death');
+        let total_recovered = document.getElementById('total_recovered');
+        let total_cases = document.getElementById('total_cases');
+        let table = document.getElementById('countries_stat');
+
+
+        //Fetching the world data
+
+        fetch("https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php", {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+                "x-rapidapi-key": "56cf0ef69amshb9e5cc1ebc4c3ddp17e6d0jsn72eb4f2a92ce"
+            }
+        })
+        .then(response => response.json().then(data => {
+            // console.log(data);
+            total_cases.innerHTML = data.total_cases;
+            new_cases.innerHTML = data.new_cases;
+            new_death.innerHTML = data.new_deaths;
+            total_death.innerHTML = data.total_deaths;
+            total_recovered.innerHTML = data.total_recovered;
+        }))
+        .catch(err => {
+            console.log(err);
+        });
+
+        //Fetching the case country data
+
+        fetch("https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php", {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+                "x-rapidapi-key": "56cf0ef69amshb9e5cc1ebc4c3ddp17e6d0jsn72eb4f2a92ce"
+            }
+        })
+        .then(response => response.json().then(data => {
+            // console.log(data);
+            let countries_stat = data.countries_stat;
+            // console.log(countries_stat);
+            for(let i = 0;i < countries_stat.length; i++) {
+                // console.log(countries_stat[i]);
+                let row = table.insertRow(i + 1);
+                let country_name = row.insertCell(0);
+                let cases = row.insertCell(1);
+                let new_cases = row.insertCell(2);
+                let deaths = row.insertCell(3);
+                let new_deaths = row.insertCell(4);
+                let serious_critical = row.insertCell(5);
+                let recovered_per_country = row.insertCell(6);
+                country_name.innerHTML = countries_stat[i].country_name;
+                countries_stat[i].cases != "0" ?            cases.innerHTML = countries_stat[i].cases:cases.innerHTML = "-";
+                countries_stat[i].new_cases != "0" ?        new_cases.innerHTML = countries_stat[i].new_cases:new_cases.innerHTML = "-";
+                countries_stat[i].deaths != "0"?            deaths.innerHTML = countries_stat[i].deaths:deaths.innerHTML = "-";
+                countries_stat[i].new_deaths != "0" ?       new_deaths.innerHTML = countries_stat[i].new_deaths:new_deaths.innerHTML = "-";
+                countries_stat[i].serious_critical != "0" ? serious_critical.innerHTML = countries_stat[i].serious_critical:serious_critical.innerHTML = "-";
+                countries_stat[i].total_recovered != "0" ?  recovered_per_country.innerHTML = countries_stat[i].total_recovered:recovered_per_country.innerHTML = "-";
+            }
+        }))
+        .catch(err => {
+            console.log(err);
+        });
+    </script>
+</body>
+</html>
